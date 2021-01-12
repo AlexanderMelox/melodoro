@@ -22,12 +22,14 @@ const Nav = ({ selectedTimer, setSelectedTimer }) => {
 }
 
 export const NavContainer = styled.nav`
+  position: relative;
   max-width: 32.7rem;
   height: 6.3rem;
   background-color: ${colors.dark2};
   border-radius: 3.15rem;
   grid-area: navigation;
   padding: 0.8rem 0.6rem;
+  margin: 0 auto;
 `
 
 export const NavList = styled.ul`
@@ -47,6 +49,11 @@ export const NavListItem = styled.li`
   color: ${({ $active }) =>
     $active ? colors.dark1 : rgba(colors.primary4, 0.4)};
   border-radius: 2.65rem;
+  cursor: pointer;
+
+  :hover {
+    background-color: ${({ $active }) => ($active ? '#F98D8D' : 'transparent')};
+  }
 `
 
 export default Nav

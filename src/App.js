@@ -3,6 +3,7 @@ import GlobalStyle from './style/GlobalStyle'
 import Container from './components/Container'
 import Header from './components/Header'
 import Nav from './components/Nav'
+import Timer from './components/Timer'
 import { H2 } from './components/Headings'
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           selectedTimer={selectedTimer}
           setSelectedTimer={setSelectedTimer}
         />
+        <Timer />
       </Container>
     </>
   )
