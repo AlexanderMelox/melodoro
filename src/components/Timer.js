@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import colors from '../style/colors'
+import { H1 } from './Headings'
 
 const SVGContainerSize = 267
 const strokeWidth = 8
@@ -19,6 +20,10 @@ const Timer = () => {
         <SVG width={SVGContainerSize} height={SVGContainerSize}>
           <ProgressCircle r={radius} cx={cx} cy={cy} />
         </SVG>
+        <TimerContainer>
+          <H1>17:59</H1>
+          <TimerAction>pause</TimerAction>
+        </TimerContainer>
       </InnerCircle>
     </OuterCircle>
   )
@@ -42,6 +47,7 @@ export const OuterCircle = styled.div`
 `
 
 export const InnerCircle = styled.div`
+  position: relative;
   ${flexCenter};
   width: 26.78rem;
   height: 26.78rem;
@@ -60,6 +66,23 @@ export const ProgressCircle = styled.circle`
   stroke-linecap: round;
   stroke-dasharray: ${circumference} ${circumference};
   stroke-dashoffset: ${offset};
+`
+
+export const TimerContainer = styled.div`
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -35%);
+`
+
+export const TimerAction = styled.span`
+  display: inline-block;
+  margin: 0.8rem 0;
+  text-transform: uppercase;
+  font-size: 1.4rem;
+  letter-spacing: 1.3rem;
+  cursor: pointer;
 `
 
 export default Timer

@@ -23,7 +23,7 @@ const Nav = ({ selectedTimer, setSelectedTimer }) => {
 
 export const NavContainer = styled.nav`
   position: relative;
-  max-width: 32.7rem;
+  min-width: 32.7rem;
   height: 6.3rem;
   background-color: ${colors.dark2};
   border-radius: 3.15rem;
@@ -42,7 +42,7 @@ export const NavList = styled.ul`
 `
 
 export const NavListItem = styled.li`
-  padding: 1.8rem 2.1rem 1.6rem;
+  padding: 1.7rem 2.3rem;
   font-size: 1.2rem;
   background-color: ${({ $active }) =>
     $active ? colors.primary1 : 'transparent'};
