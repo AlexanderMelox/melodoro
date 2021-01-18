@@ -6,6 +6,13 @@ import Nav from './components/Nav'
 import Timer from './components/Timer'
 import { H2 } from './components/Headings'
 
+// this will be replace from the settings modal
+const timerMap = {
+  pomodoro: 25,
+  'short break': 5,
+  'long break': 10,
+}
+
 function App() {
   const [selectedTimer, setSelectedTimer] = useState('pomodoro')
 
@@ -20,7 +27,7 @@ function App() {
           selectedTimer={selectedTimer}
           setSelectedTimer={setSelectedTimer}
         />
-        <Timer />
+        <Timer minutes={timerMap[selectedTimer]} />
       </Container>
     </>
   )

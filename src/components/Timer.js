@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import styled from 'styled-components/macro'
 import colors from '../style/colors'
 import { H1 } from './Headings'
@@ -12,21 +12,50 @@ const cy = SVGContainerSize / 2
 
 const circumference = radius * 2 * Math.PI
 
-const Timer = () => {
-  const startingMilliseconds = minutesToMilliseconds(25)
+const Timer = ({ minutes = 25 }) => {
+  // Converts the time from minutes to milliseconds
+  const [startingMilliseconds, setStartingMilliSeconds] = useState(
+    minutesToMilliseconds(minutes)
+  )
+  const [timerAction, setTimerAction] = useState('start')
   const [time, setTime] = useState(startingMilliseconds)
 
+  // percent for circle progress bar
   const percent = (time / startingMilliseconds) * 100
   const offset = circumference - (percent / 100) * circumference
 
+  // converts the time from milliseconds to a time format MM:SS
+  const formattedTime = useMemo(() => formatTime(time), [time])
+
   useEffect(() => {
     const countdown = setInterval(() => {
-      setTime((prevTime) => prevTime - 1000)
+      if (timerAction !== 'start') {
+        setTime((prevTime) => prevTime - 1000)
+      }
     }, 1000)
+    if (time <= 0) {
+      clearInterval(countdown)
+      setTimerAction('restart')
+    }
     return () => clearInterval(countdown)
-  }, [])
+  }, [timerAction, time])
 
-  const formattedTime = useMemo(() => formatTime(time), [time])
+  useEffect(() => {
+    setTimerAction('start')
+    setStartingMilliSeconds(minutesToMilliseconds(minutes))
+    setTime(startingMilliseconds)
+  }, [minutes, startingMilliseconds])
+
+  const toggleTimerState = useCallback(() => {
+    if (timerAction === 'start') {
+      setTimerAction('pause')
+    } else if (timerAction === 'restart') {
+      setTime(startingMilliseconds)
+      setTimerAction('start')
+    } else {
+      setTimerAction('start')
+    }
+  }, [timerAction, startingMilliseconds])
 
   return (
     <OuterCircle>
@@ -36,7 +65,12 @@ const Timer = () => {
         </SVG>
         <TimerContainer>
           <Time>{formattedTime}</Time>
-          <TimerAction>pause</TimerAction>
+          <TimerAction
+            onClick={toggleTimerState}
+            $isStart={timerAction === 'start'}
+          >
+            {timerAction}
+          </TimerAction>
         </TimerContainer>
       </InnerCircle>
     </OuterCircle>
@@ -90,7 +124,9 @@ export const TimerContainer = styled.div`
   transform: translate(-50%, -35%);
 `
 
-export const Time = styled(H1)``
+export const Time = styled(H1)`
+  font-variant-numeric: tabular-nums;
+`
 
 export const TimerAction = styled.span`
   display: inline-block;
@@ -99,6 +135,10 @@ export const TimerAction = styled.span`
   font-size: 1.4rem;
   letter-spacing: 1.3rem;
   cursor: pointer;
+
+  :hover {
+    color: ${colors.primary1};
+  }
 `
 
 export default Timer
