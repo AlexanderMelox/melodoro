@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { rgba } from 'polished'
 import colors from '../style/colors'
 
@@ -10,6 +10,7 @@ const Nav = ({ selectedTimer, setSelectedTimer }) => {
       <NavList>
         {timers.map((timer) => (
           <NavListItem
+            key={timer}
             $active={timer === selectedTimer}
             onClick={() => setSelectedTimer(timer)}
           >

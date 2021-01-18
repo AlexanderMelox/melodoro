@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 
 const Container = styled.main`
   display: grid;
@@ -8,7 +8,7 @@ const Container = styled.main`
   grid-template-rows: 10.1rem 6.3rem 1fr 7.6rem;
   grid-template-areas:
     '. header .'
-    '. navigation .'
+    'navigation navigation navigation'
     '. timer .'
     '. settings .';
 `

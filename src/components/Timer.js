@@ -1,7 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useState, useEffect, useMemo } from 'react'
+import styled from 'styled-components/macro'
 import colors from '../style/colors'
 import { H1 } from './Headings'
+import { minutesToMilliseconds, formatTime } from '../utils'
 
 const SVGContainerSize = 267
 const strokeWidth = 8
@@ -10,18 +11,31 @@ const cx = SVGContainerSize / 2
 const cy = SVGContainerSize / 2
 
 const circumference = radius * 2 * Math.PI
-const percent = 50
-const offset = circumference - (percent / 100) * circumference
 
 const Timer = () => {
+  const startingMilliseconds = minutesToMilliseconds(25)
+  const [time, setTime] = useState(startingMilliseconds)
+
+  const percent = (time / startingMilliseconds) * 100
+  const offset = circumference - (percent / 100) * circumference
+
+  useEffect(() => {
+    const countdown = setInterval(() => {
+      setTime((prevTime) => prevTime - 1000)
+    }, 1000)
+    return () => clearInterval(countdown)
+  }, [])
+
+  const formattedTime = useMemo(() => formatTime(time), [time])
+
   return (
     <OuterCircle>
       <InnerCircle>
         <SVG width={SVGContainerSize} height={SVGContainerSize}>
-          <ProgressCircle r={radius} cx={cx} cy={cy} />
+          <ProgressCircle r={radius} cx={cx} cy={cy} $offset={offset} />
         </SVG>
         <TimerContainer>
-          <H1>17:59</H1>
+          <Time>{formattedTime}</Time>
           <TimerAction>pause</TimerAction>
         </TimerContainer>
       </InnerCircle>
@@ -65,7 +79,7 @@ export const ProgressCircle = styled.circle`
   fill: transparent;
   stroke-linecap: round;
   stroke-dasharray: ${circumference} ${circumference};
-  stroke-dashoffset: ${offset};
+  stroke-dashoffset: ${({ $offset }) => $offset};
 `
 
 export const TimerContainer = styled.div`
@@ -75,6 +89,8 @@ export const TimerContainer = styled.div`
   left: 50%;
   transform: translate(-50%, -35%);
 `
+
+export const Time = styled(H1)``
 
 export const TimerAction = styled.span`
   display: inline-block;

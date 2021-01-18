@@ -14,7 +14,7 @@ function App() {
       <GlobalStyle />
       <Container>
         <Header>
-          <H2>pomodoro</H2>
+          <H2>melodoro</H2>
         </Header>
         <Nav
           selectedTimer={selectedTimer}
