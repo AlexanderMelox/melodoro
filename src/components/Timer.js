@@ -61,7 +61,12 @@ const Timer = ({ minutes = 25 }) => {
     <OuterCircle>
       <InnerCircle>
         <SVG width={SVGContainerSize} height={SVGContainerSize}>
-          <ProgressCircle r={radius} cx={cx} cy={cy} $offset={offset} />
+          <ProgressCircle
+            r={radius}
+            cx={cx}
+            cy={cy}
+            style={{ strokeDashoffset: offset }}
+          />
         </SVG>
         <TimerContainer>
           <Time>{formattedTime}</Time>
@@ -113,7 +118,6 @@ export const ProgressCircle = styled.circle`
   fill: transparent;
   stroke-linecap: round;
   stroke-dasharray: ${circumference} ${circumference};
-  stroke-dashoffset: ${({ $offset }) => $offset};
 `
 
 export const TimerContainer = styled.div`

@@ -7,6 +7,9 @@ const colors = {
   dark2: '#161932',
   light1: '#ffffff',
   light2: '#eff1fa',
+  borders: {
+    gray1: '#e3e1e1',
+  },
 }
 
 export default colors
