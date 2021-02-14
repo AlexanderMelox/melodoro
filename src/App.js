@@ -5,6 +5,7 @@ import Header from './components/Header'
 import Nav from './components/Nav'
 import Timer from './components/Timer'
 import { H2 } from './components/Headings'
+import Settings from './components/Settings'
 
 // this will be replace from the settings modal
 const timerMap = {
@@ -28,6 +29,7 @@ function App() {
           setSelectedTimer={setSelectedTimer}
         />
         <Timer minutes={timerMap[selectedTimer]} />
+        <Settings />
       </Container>
     </>
   )
