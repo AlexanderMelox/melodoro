@@ -64,7 +64,7 @@ const Modal = ({ open = false, closeModal }) => {
 const ModalBackdrop = styled(motion.div)`
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   position: fixed;
   top: 0;
   left: 0;
@@ -79,6 +79,7 @@ const ModalContainer = styled(motion.div)`
   width: 90%;
   min-height: 54.9rem;
   max-width: 54rem;
+  margin-top: 4.6rem;
   border-radius: 1.5rem;
   background-color: ${colors.light1};
 `
