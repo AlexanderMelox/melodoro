@@ -94,7 +94,7 @@ export const OuterCircle = styled.div`
   height: 30rem;
   grid-area: timer;
   border-radius: 50%;
-  margin: 4.8rem auto 0;
+  margin: 4.8rem auto 8rem;
   background-image: linear-gradient(to bottom right, #0e112a, #2e325a);
   box-shadow: -5rem -5rem 10rem 0 #272c5a, 5rem 5rem 10rem 0 #121530;
 `
