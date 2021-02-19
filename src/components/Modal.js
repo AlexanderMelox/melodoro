@@ -6,6 +6,7 @@ import { IconButton } from './Buttons'
 import colors from '../style/colors'
 import closeIcon from '../assets/icon-close.svg'
 import useClickOutside from '../hooks/useClickOutside'
+import useNumberInput from '../hooks/useNumberInput'
 import { H4 } from './Headings'
 
 // portal query selector
@@ -26,6 +27,16 @@ const variants = {
 
 const Modal = ({ open = false, closeModal }) => {
   const modalRef = useRef()
+  // TODO: switch these initial values to a global state
+  const [PomodoroInput] = useNumberInput({ name: 'pomodoro', initialValue: 25 })
+  const [ShortBreakInput] = useNumberInput({
+    name: 'short break',
+    initialValue: 5,
+  })
+  const [LongBreakInput] = useNumberInput({
+    name: 'long break',
+    initialValue: 15,
+  })
 
   // closes the modal if clicked outside of it
   useClickOutside({ ref: modalRef, condition: open }, () => {
@@ -50,7 +61,12 @@ const Modal = ({ open = false, closeModal }) => {
             </ModalHeader>
             <ModalBody>
               <ModalSection>
-                <H4 $align="center">Time (minutes)</H4>
+                <H4 $align="center" $mb="1.6rem">
+                  Time (minutes)
+                </H4>
+                <PomodoroInput />
+                <ShortBreakInput />
+                <LongBreakInput />
               </ModalSection>
             </ModalBody>
           </ModalContainer>

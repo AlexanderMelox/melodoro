@@ -1,5 +1,9 @@
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import colors from '../style/colors'
+
+const commonStyles = css`
+  margin-bottom: ${({ $mb }) => $mb};
+`
 
 export const H1 = styled.h1`
   font-size: 8rem;
@@ -15,6 +19,7 @@ export const H2 = styled.h2`
 `
 
 export const H4 = styled.h4`
+  ${commonStyles};
   font-weight: bold;
   font-size: 1.1rem;
   letter-spacing: 0.5rem;
