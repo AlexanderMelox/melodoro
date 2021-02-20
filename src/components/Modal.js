@@ -15,25 +15,29 @@ const modalRoot = document.getElementById('modal-root')
 const variants = {
   backdrop: {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { when: 'beforeChildren' } },
+    visible: { opacity: 1 },
     close: { opacity: 0 },
   },
   modal: {
-    hidden: { opacity: 0, scale: 0 },
-    visible: { opacity: 1, scale: 1, y: 0 },
+    hidden: { opacity: 0, y: 100 },
+    visible: { opacity: 1, y: 0 },
     close: { opacity: 0, y: 100 },
   },
 }
 
 const Modal = ({ open = false, closeModal }) => {
   const modalRef = useRef()
+
   // TODO: switch these initial values to a global state
-  const [PomodoroInput] = useNumberInput({ name: 'pomodoro', initialValue: 25 })
-  const [ShortBreakInput] = useNumberInput({
+  const [PomodoroInput, pomodoroTime] = useNumberInput({
+    name: 'pomodoro',
+    initialValue: 25,
+  })
+  const [ShortBreakInput, shortBreakTime] = useNumberInput({
     name: 'short break',
     initialValue: 5,
   })
-  const [LongBreakInput] = useNumberInput({
+  const [LongBreakInput, longBreakTime] = useNumberInput({
     name: 'long break',
     initialValue: 15,
   })
@@ -42,6 +46,8 @@ const Modal = ({ open = false, closeModal }) => {
   useClickOutside({ ref: modalRef, condition: open }, () => {
     closeModal()
   })
+
+  console.log({ pomodoroTime, shortBreakTime, longBreakTime })
 
   return createPortal(
     <AnimatePresence>
