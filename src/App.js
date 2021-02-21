@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import GlobalStyle from './style/GlobalStyle'
 import Container from './components/Container'
 import Header from './components/Header'
@@ -6,16 +6,10 @@ import Nav from './components/Nav'
 import Timer from './components/Timer'
 import { H2 } from './components/Headings'
 import Settings from './components/Settings'
-
-// this will be replace from the settings modal
-const timerMap = {
-  pomodoro: 25,
-  'short break': 5,
-  'long break': 10,
-}
+import { SettingsContext } from './contexts/SettingsContext'
 
 function App() {
-  const [selectedTimer, setSelectedTimer] = useState('pomodoro')
+  const [{ selectedTimer, timer }, actions] = useContext(SettingsContext)
 
   return (
     <>
@@ -26,9 +20,9 @@ function App() {
         </Header>
         <Nav
           selectedTimer={selectedTimer}
-          setSelectedTimer={setSelectedTimer}
+          setSelectedTimer={actions.setSelectedTimer}
         />
-        <Timer minutes={timerMap[selectedTimer]} />
+        <Timer minutes={timer[selectedTimer]} />
         <Settings />
       </Container>
     </>

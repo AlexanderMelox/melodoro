@@ -2,7 +2,12 @@ import styled from 'styled-components/macro'
 import { rgba } from 'polished'
 import colors from '../style/colors'
 
-const timers = ['pomodoro', 'short break', 'long break']
+const timers = ['pomodoro', 'shortBreak', 'longBreak']
+const timerMap = {
+  pomodoro: 'pomodoro',
+  shortBreak: 'short break',
+  longBreak: 'long break',
+}
 
 const Nav = ({ selectedTimer, setSelectedTimer }) => {
   return (
@@ -14,7 +19,7 @@ const Nav = ({ selectedTimer, setSelectedTimer }) => {
             $active={timer === selectedTimer}
             onClick={() => setSelectedTimer(timer)}
           >
-            {timer}
+            {timerMap[timer]}
           </NavListItem>
         ))}
       </NavList>
