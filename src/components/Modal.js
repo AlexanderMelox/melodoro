@@ -93,6 +93,7 @@ const Modal = ({ open = false, closeModal }) => {
                   <RadioGroup onChange={onFontSelection}>
                     {fontOptions.map((font, i) => (
                       <FontRadioLabel
+                        key={font}
                         $font={font}
                         $selected={font === selectedFont}
                         htmlFor={font}
