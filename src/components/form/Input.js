@@ -10,6 +10,17 @@ const Input = styled.input`
   font: inherit;
   color: ${colors.dark1};
   font-size: 1.4rem;
+
+  &[type='number'] {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  &[type='number']::-webkit-inner-spin-button,
+  &[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+  }
 `
 
 export default Input

@@ -18,18 +18,18 @@ const useNumberInput = ({ initialValue = 0, name = '' }) => {
     if (isNaN(value)) {
       setValue(initialValue)
     }
-  }, [value])
+  }, [value, initialValue])
 
   // Component that renders the number input
-  const Component = React.memo(() => {
+  const Component = () => {
     return (
       <FormGroup>
         <FormLabel htmlFor={name}>{name}</FormLabel>
         <NumberInput
           ref={inputRef}
           id={name}
-          type="number"
           value={value}
+          setValue={setValue}
           onChange={updateValue}
           onBlur={onBlur}
           name={name}
@@ -39,7 +39,7 @@ const useNumberInput = ({ initialValue = 0, name = '' }) => {
         />
       </FormGroup>
     )
-  })
+  }
 
   return [Component, value]
 }
