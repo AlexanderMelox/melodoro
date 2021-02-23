@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro'
+import { colors } from '../style'
 
 const buttonReset = `
   display: inline-block;
@@ -29,6 +30,18 @@ const buttonReset = `
   }
 `
 
+export const Button = styled.button`
+  ${buttonReset}
+  padding: 1.7rem 4.7rem;
+  font-size: 1.6rem;
+  border-radius: 26.5rem;
+`
+
+export const PrimaryButton = styled(Button)`
+  background-color: ${colors.primary1};
+  color: ${colors.light1};
+`
+
 export const IconButton = styled.button`
-  ${buttonReset};
+  ${buttonReset}
 `

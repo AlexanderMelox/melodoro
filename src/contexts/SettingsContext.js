@@ -10,7 +10,7 @@ const initialState = {
   },
   selectedTimer: 'pomodoro',
   font: KUMBH_SANS,
-  color: 'todo',
+  color: 'primary1',
 }
 
 export const SettingsContext = createContext()

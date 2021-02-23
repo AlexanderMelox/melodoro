@@ -4,7 +4,6 @@ import { colors } from '../../style'
 const RadioLabel = styled.label`
   span {
     position: relative;
-    display: inline-block;
     width: 4rem;
     height: 4rem;
     display: flex;

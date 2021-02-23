@@ -3,9 +3,10 @@ import styled from 'styled-components/macro'
 import { rgba } from 'polished'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createPortal } from 'react-dom'
-import { IconButton } from './Buttons'
+import { IconButton, PrimaryButton } from './Buttons'
 import { colors } from '../style'
 import closeIcon from '../assets/icon-close.svg'
+import checkIcon from '../assets/icon-check.svg'
 import useClickOutside from '../hooks/useClickOutside'
 import useNumberInput from '../hooks/useNumberInput'
 import { H4 } from './Headings'
@@ -32,9 +33,13 @@ const variants = {
 // To map over and create the font radio buttons
 const fontOptions = [KUMBH_SANS, ROBOTO_SLAB, SPACE_MONO]
 
+// To map over and create the color radio buttons
+const colorOptions = ['primary1', 'primary2', 'primary3']
+
 const Modal = ({ open = false, closeModal }) => {
   const modalRef = useRef()
   const [selectedFont, setSelectedFont] = useState(KUMBH_SANS)
+  const [selectedColor, setSelectedColor] = useState('primary1')
 
   // TODO: switch these initial values to a global state
   const [PomodoroInput, pomodoroTime] = useNumberInput({
@@ -57,6 +62,11 @@ const Modal = ({ open = false, closeModal }) => {
 
   const onFontSelection = useCallback(
     (event) => setSelectedFont(event.target.value),
+    []
+  )
+
+  const onColorSelection = useCallback(
+    (event) => setSelectedColor(event.target.value),
     []
   )
 
@@ -110,6 +120,35 @@ const Modal = ({ open = false, closeModal }) => {
                     ))}
                   </RadioGroup>
                 </ModalSection>
+                <ModalSection>
+                  <H4 $align="center" $mb="1.6rem">
+                    Color
+                  </H4>
+                  <RadioGroup onChange={onColorSelection}>
+                    {colorOptions.map((color, i) => (
+                      <ColorRadioLabel
+                        key={color}
+                        $color={color}
+                        htmlFor={color}
+                      >
+                        <input
+                          id={color}
+                          defaultChecked={i === 0}
+                          type="radio"
+                          value={color}
+                          name="color"
+                        />
+
+                        <span>
+                          {color === selectedColor && (
+                            <img src={checkIcon} alt="color selected" />
+                          )}
+                        </span>
+                      </ColorRadioLabel>
+                    ))}
+                  </RadioGroup>
+                </ModalSection>
+                <SubmitButton type="submit">Apply</SubmitButton>
               </form>
             </ModalBody>
           </ModalContainer>
@@ -159,12 +198,16 @@ const ModalTitle = styled.h2`
 
 const ModalBody = styled.div`
   padding: 2.4rem;
+  position: relative;
 `
 
 const ModalSection = styled.div`
   padding-bottom: 2.4rem;
-  margin-bottom: 2.4rem;
-  border-bottom: 1px solid ${colors.borders.gray1};
+
+  &:not(&:last-of-type) {
+    border-bottom: 1px solid ${colors.borders.gray1};
+    margin-bottom: 2.4rem;
+  }
 `
 
 const FontRadioLabel = styled(RadioLabel)`
@@ -177,6 +220,19 @@ const FontRadioLabel = styled(RadioLabel)`
     color: ${({ $selected }) =>
       $selected ? colors.light1 : rgba(colors.dark1, 0.73)};
   }
+`
+
+const ColorRadioLabel = styled(RadioLabel)`
+  span {
+    background-color: ${({ $color }) => colors[$color]};
+  }
+`
+
+const SubmitButton = styled(PrimaryButton)`
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 50%);
 `
 
 export default Modal
