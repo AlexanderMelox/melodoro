@@ -25,6 +25,7 @@ const SettingsProvider = ({ children }) => {
 
   const actions = {
     setSelectedTimer,
+    setSettings,
   }
 
   return (

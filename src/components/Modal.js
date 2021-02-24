@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from 'react'
+import React, { useRef, useCallback, useState, useContext } from 'react'
 import styled from 'styled-components/macro'
 import { rgba } from 'polished'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -13,6 +13,7 @@ import { H4 } from './Headings'
 import { KUMBH_SANS, ROBOTO_SLAB, SPACE_MONO } from '../constants'
 import { RadioGroup, RadioLabel } from './form'
 import { fontTypeToCSSFontFamily } from '../utils'
+import { SettingsContext } from '../contexts/SettingsContext'
 
 // portal query selector
 const modalRoot = document.getElementById('modal-root')
@@ -38,21 +39,23 @@ const colorOptions = ['primary1', 'primary2', 'primary3']
 
 const Modal = ({ open = false, closeModal }) => {
   const modalRef = useRef()
-  const [selectedFont, setSelectedFont] = useState(KUMBH_SANS)
-  const [selectedColor, setSelectedColor] = useState('primary1')
+  const [{ timer, font, color }, actions] = useContext(SettingsContext)
+
+  const [selectedFont, setSelectedFont] = useState(font)
+  const [selectedColor, setSelectedColor] = useState(color)
 
   // TODO: switch these initial values to a global state
   const [PomodoroInput, pomodoroTime] = useNumberInput({
     name: 'pomodoro',
-    initialValue: 25,
+    initialValue: timer.pomodoro,
   })
   const [ShortBreakInput, shortBreakTime] = useNumberInput({
     name: 'short break',
-    initialValue: 5,
+    initialValue: timer.shortBreak,
   })
   const [LongBreakInput, longBreakTime] = useNumberInput({
     name: 'long break',
-    initialValue: 15,
+    initialValue: timer.longBreak,
   })
 
   // closes the modal if clicked outside of it
@@ -69,6 +72,22 @@ const Modal = ({ open = false, closeModal }) => {
     (event) => setSelectedColor(event.target.value),
     []
   )
+
+  // runs when you submit the modal
+  const applyChanges = (event) => {
+    event.preventDefault()
+    actions.setSettings((prev) => ({
+      ...prev,
+      timer: {
+        pomodoro: pomodoroTime,
+        shortBreak: shortBreakTime,
+        longBreak: longBreakTime,
+      },
+      font: selectedFont,
+      color: selectedColor,
+    }))
+    closeModal()
+  }
 
   return createPortal(
     <AnimatePresence>
@@ -87,7 +106,7 @@ const Modal = ({ open = false, closeModal }) => {
               </IconButton>
             </ModalHeader>
             <ModalBody>
-              <form>
+              <form onSubmit={applyChanges}>
                 <ModalSection>
                   <H4 $align="center" $mb="1.6rem">
                     Time (minutes)
