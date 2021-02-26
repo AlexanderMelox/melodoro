@@ -1,8 +1,17 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import styled from 'styled-components/macro'
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useContext,
+  useRef,
+} from 'react'
+import styled, { css } from 'styled-components/macro'
 import colors from '../style/colors'
 import { H1 } from './Headings'
 import { minutesToMilliseconds, formatTime } from '../utils'
+import { SettingsContext } from '../contexts/SettingsContext'
+import { KUMBH_SANS, ROBOTO_SLAB, SPACE_MONO } from '../constants'
 
 const SVGContainerSize = 267
 const strokeWidth = 8
@@ -13,10 +22,13 @@ const cy = SVGContainerSize / 2
 const circumference = radius * 2 * Math.PI
 
 const Timer = ({ minutes = 25 }) => {
+  const [{ font }] = useContext(SettingsContext)
+
   // Converts the time from minutes to milliseconds
   const [startingMilliseconds, setStartingMilliSeconds] = useState(
     minutesToMilliseconds(minutes)
   )
+
   const [timerAction, setTimerAction] = useState('start')
   const [time, setTime] = useState(startingMilliseconds)
 
@@ -34,11 +46,12 @@ const Timer = ({ minutes = 25 }) => {
       }
     }, 1000)
     if (time <= 0) {
+      setStartingMilliSeconds(minutesToMilliseconds(minutes))
       clearInterval(countdown)
       setTimerAction('restart')
     }
     return () => clearInterval(countdown)
-  }, [timerAction, time])
+  }, [timerAction, time, minutes])
 
   useEffect(() => {
     setTimerAction('start')
@@ -46,12 +59,16 @@ const Timer = ({ minutes = 25 }) => {
     setTime(startingMilliseconds)
   }, [minutes, startingMilliseconds])
 
+  const restart = useCallback(() => {
+    setTime(startingMilliseconds)
+    setTimerAction('start')
+  }, [])
+
   const toggleTimerState = useCallback(() => {
     if (timerAction === 'start') {
       setTimerAction('pause')
     } else if (timerAction === 'restart') {
-      setTime(startingMilliseconds)
-      setTimerAction('start')
+      restart()
     } else {
       setTimerAction('start')
     }
@@ -69,7 +86,7 @@ const Timer = ({ minutes = 25 }) => {
           />
         </SVG>
         <TimerContainer>
-          <Time>{formattedTime}</Time>
+          <Time $font={font}>{formattedTime}</Time>
           <TimerAction
             onClick={toggleTimerState}
             $isStart={timerAction === 'start'}
@@ -128,9 +145,19 @@ export const TimerContainer = styled.div`
   transform: translate(-50%, -35%);
 `
 
+const fontsStyleMap = {
+  [KUMBH_SANS]: css``,
+  [SPACE_MONO]: css`
+    letter-spacing: -0.9rem;
+    margin-right: 0.9rem;
+    font-weight: normal;
+    transform: translateY(-1rem);
+  `,
+}
+
 export const Time = styled(H1)`
   font-family: var(--selected-font);
-  font-variant-numeric: tabular-nums;
+  ${({ $font }) => fontsStyleMap[$font]}
 `
 
 export const TimerAction = styled.span`
@@ -139,6 +166,11 @@ export const TimerAction = styled.span`
   text-transform: uppercase;
   font-size: 1.4rem;
   letter-spacing: 1.3rem;
+  /* 
+    letter spacing adds extra space at the end, 
+    so we offset it with a margin right of the same letter-spacing
+   */
+  margin-right: -1.3rem;
   cursor: pointer;
 
   :hover {
