@@ -10,7 +10,11 @@ export const formatTime = (milliseconds) => {
   const minutes = Math.floor(milliseconds / oneMinuteInMilliseconds)
   const seconds = ((milliseconds % oneMinuteInMilliseconds) / 1000).toFixed(0)
 
-  const formattedTime = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
+  let formattedTime = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
+
+  if (formattedTime.length === 4) {
+    formattedTime = `0${formattedTime}`
+  }
 
   return formattedTime
 }
