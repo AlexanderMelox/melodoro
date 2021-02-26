@@ -1,27 +1,58 @@
-import { useCallback, forwardRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import styled from 'styled-components/macro'
+import FormGroup from './FormGroup'
+import FormLabel from './FormLabel'
 import Input from './Input'
 
-const NumberInput = forwardRef(({ setValue, ...props }, ref) => {
+const NumberInput = ({
+  value = 0,
+  onChange = () => {},
+  name = '',
+  min = 0,
+  max = 60,
+  step = 1,
+  setValue,
+}) => {
+  const startingValue = useRef(value)
+
   const increment = (event) => {
     event.stopPropagation()
-    setValue((prev) => prev + 1)
+    setValue((prev) => ({ ...prev, [name]: prev[name] + 1 }))
   }
   const decrement = (event) => {
     event.stopPropagation()
-    setValue((prev) => prev - 1)
+    setValue((prev) => ({ ...prev, [name]: prev[name] - 1 }))
   }
 
+  const onBlur = useCallback(() => {
+    if (!value) {
+      setValue((prev) => ({ ...prev, [name]: startingValue.current }))
+    }
+  }, [value, name, setValue])
+
   return (
-    <InputContainer>
-      <Input ref={ref} type="number" {...props} />
-      <IconsContainer>
-        <IconUp onClick={increment} />
-        <IconDown onClick={decrement} />
-      </IconsContainer>
-    </InputContainer>
+    <FormGroup>
+      <FormLabel htmlFor={name}>{name}</FormLabel>
+      <InputContainer>
+        <Input
+          type="number"
+          id={name}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          name={name}
+          min={min}
+          max={max}
+          step={step}
+        />
+        <IconsContainer>
+          <IconUp onClick={increment} />
+          <IconDown onClick={decrement} />
+        </IconsContainer>
+      </InputContainer>
+    </FormGroup>
   )
-})
+}
 
 const IconUp = ({ ...props }) => (
   <SVG xmlns="http://www.w3.org/2000/svg" width="14" height="7" {...props}>

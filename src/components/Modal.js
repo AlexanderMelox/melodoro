@@ -1,4 +1,10 @@
-import React, { useRef, useCallback, useState, useContext } from 'react'
+import React, {
+  useRef,
+  useCallback,
+  useState,
+  useContext,
+  useEffect,
+} from 'react'
 import styled from 'styled-components/macro'
 import { rgba } from 'polished'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -8,12 +14,12 @@ import { colors } from '../style'
 import closeIcon from '../assets/icon-close.svg'
 import checkIcon from '../assets/icon-check.svg'
 import useClickOutside from '../hooks/useClickOutside'
-import useNumberInput from '../hooks/useNumberInput'
 import { H4 } from './Headings'
 import { KUMBH_SANS, ROBOTO_SLAB, SPACE_MONO } from '../constants'
 import { RadioGroup, RadioLabel } from './form'
 import { fontTypeToCSSFontFamily } from '../utils'
 import { SettingsContext } from '../contexts/SettingsContext'
+import NumberInput from './form/NumberInput'
 
 // portal query selector
 const modalRoot = document.getElementById('modal-root')
@@ -44,19 +50,21 @@ const Modal = ({ open = false, closeModal }) => {
   const [selectedFont, setSelectedFont] = useState(font)
   const [selectedColor, setSelectedColor] = useState(color)
 
-  // TODO: switch these initial values to a global state
-  const [PomodoroInput, pomodoroTime] = useNumberInput({
-    name: 'pomodoro',
-    initialValue: timer.pomodoro,
+  const [timeInputs, setTimeInputs] = useState({
+    pomodoro: timer.pomodoro,
+    shortBreak: timer.shortBreak,
+    longBreak: timer.longBreak,
   })
-  const [ShortBreakInput, shortBreakTime] = useNumberInput({
-    name: 'short break',
-    initialValue: timer.shortBreak,
-  })
-  const [LongBreakInput, longBreakTime] = useNumberInput({
-    name: 'long break',
-    initialValue: timer.longBreak,
-  })
+
+  const onTimerInputChange = useCallback(
+    ({ target: { value, name } }) => {
+      setTimeInputs({
+        ...timeInputs,
+        [name]: value ? parseInt(value) : value,
+      })
+    },
+    [timeInputs, setTimeInputs]
+  )
 
   // closes the modal if clicked outside of it
   useClickOutside({ ref: modalRef, condition: open }, () => {
@@ -79,15 +87,27 @@ const Modal = ({ open = false, closeModal }) => {
     actions.setSettings((prev) => ({
       ...prev,
       timer: {
-        pomodoro: pomodoroTime,
-        shortBreak: shortBreakTime,
-        longBreak: longBreakTime,
+        pomodoro: timeInputs.pomodoro,
+        shortBreak: timeInputs.shortBreak,
+        longBreak: timeInputs.longBreak,
       },
       font: selectedFont,
       color: selectedColor,
     }))
     closeModal()
   }
+
+  const resetValues = useCallback(() => {
+    setTimeInputs({
+      pomodoro: timer.pomodoro,
+      shortBreak: timer.shortBreak,
+      longBreak: timer.longBreak,
+    })
+    setSelectedFont(font)
+    setSelectedColor(color)
+  }, [timer, color, font])
+
+  useEffect(() => resetValues(), [open, resetValues])
 
   return createPortal(
     <AnimatePresence>
@@ -111,16 +131,31 @@ const Modal = ({ open = false, closeModal }) => {
                   <H4 $align="center" $mb="1.6rem">
                     Time (minutes)
                   </H4>
-                  <PomodoroInput />
-                  <ShortBreakInput />
-                  <LongBreakInput />
+                  <NumberInput
+                    value={timeInputs.pomodoro}
+                    onChange={onTimerInputChange}
+                    setValue={setTimeInputs}
+                    name="pomodoro"
+                  />
+                  <NumberInput
+                    value={timeInputs.shortBreak}
+                    onChange={onTimerInputChange}
+                    setValue={setTimeInputs}
+                    name="shortBreak"
+                  />
+                  <NumberInput
+                    value={timeInputs.longBreak}
+                    onChange={onTimerInputChange}
+                    setValue={setTimeInputs}
+                    name="longBreak"
+                  />
                 </ModalSection>
                 <ModalSection>
                   <H4 $align="center" $mb="1.6rem">
                     Font
                   </H4>
                   <RadioGroup onChange={onFontSelection}>
-                    {fontOptions.map((font, i) => (
+                    {fontOptions.map((font) => (
                       <FontRadioLabel
                         key={font}
                         $font={font}
@@ -129,7 +164,7 @@ const Modal = ({ open = false, closeModal }) => {
                       >
                         <input
                           id={font}
-                          defaultChecked={i === 0}
+                          defaultChecked={font === selectedFont}
                           type="radio"
                           value={font}
                           name="font"
@@ -144,7 +179,7 @@ const Modal = ({ open = false, closeModal }) => {
                     Color
                   </H4>
                   <RadioGroup onChange={onColorSelection}>
-                    {colorOptions.map((color, i) => (
+                    {colorOptions.map((color) => (
                       <ColorRadioLabel
                         key={color}
                         $color={color}
@@ -152,7 +187,7 @@ const Modal = ({ open = false, closeModal }) => {
                       >
                         <input
                           id={color}
-                          defaultChecked={i === 0}
+                          defaultChecked={color === selectedColor}
                           type="radio"
                           value={color}
                           name="color"

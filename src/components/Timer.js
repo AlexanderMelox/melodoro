@@ -129,6 +129,7 @@ export const TimerContainer = styled.div`
 `
 
 export const Time = styled(H1)`
+  font-family: var(--selected-font);
   font-variant-numeric: tabular-nums;
 `
 

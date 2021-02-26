@@ -9,11 +9,13 @@ import Settings from './components/Settings'
 import { SettingsContext } from './contexts/SettingsContext'
 
 function App() {
-  const [{ selectedTimer, timer }, actions] = useContext(SettingsContext)
+  const [{ selectedTimer, timer, font, color }, actions] = useContext(
+    SettingsContext
+  )
 
   return (
     <>
-      <GlobalStyle />
+      <GlobalStyle $selectedFont={font} $selectedColor={color} />
       <Container>
         <Header>
           <H2>melodoro</H2>

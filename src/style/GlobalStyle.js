@@ -5,6 +5,10 @@ import typography from './typography'
 const { fonts } = typography
 
 const GlobalStyle = createGlobalStyle`
+  :root {
+    --selected-font: '${({ $selectedFont }) => $selectedFont}';
+  }
+
   *,
   *::before,
   *::after {
@@ -19,7 +23,6 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    overflow: hidden;
     font-family:  ${fonts[0]};
     background-color: ${colors.dark1};
     color: ${colors.primary4};
