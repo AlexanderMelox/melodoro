@@ -147,6 +147,10 @@ export const TimerContainer = styled.div`
 
 const fontsStyleMap = {
   [KUMBH_SANS]: css``,
+  [ROBOTO_SLAB]: css`
+    letter-spacing: 0;
+    transform: translateY(-1rem);
+  `,
   [SPACE_MONO]: css`
     letter-spacing: -0.9rem;
     margin-right: 0.9rem;
@@ -157,6 +161,7 @@ const fontsStyleMap = {
 
 export const Time = styled(H1)`
   font-family: var(--selected-font);
+  /* TODO: move font specific styles here instead of the h1 */
   ${({ $font }) => fontsStyleMap[$font]}
 `
 
@@ -173,8 +178,10 @@ export const TimerAction = styled.span`
   margin-right: -1.3rem;
   cursor: pointer;
 
-  :hover {
-    color: ${colors.primary1};
+  @media (hover: hover) {
+    :hover {
+      color: ${colors.primary1};
+    }
   }
 `
 

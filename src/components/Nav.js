@@ -36,6 +36,7 @@ export const NavContainer = styled.nav`
   grid-area: navigation;
   padding: 0.8rem 0.6rem;
   margin: 0 auto;
+  font-family: var(--selected-font);
 `
 
 export const NavList = styled.ul`
@@ -57,8 +58,11 @@ export const NavListItem = styled.li`
   border-radius: 2.65rem;
   cursor: pointer;
 
-  :hover {
-    background-color: ${({ $active }) => ($active ? '#F98D8D' : 'transparent')};
+  @media (hover: hover) {
+    :hover {
+      background-color: ${({ $active }) =>
+        $active ? '#F98D8D' : 'transparent'};
+    }
   }
 `
 
