@@ -7,6 +7,7 @@ const { fonts } = typography
 const GlobalStyle = createGlobalStyle`
   :root {
     --selected-font: '${({ $selectedFont }) => $selectedFont}';
+    --selected-color: ${({ $selectedColor }) => colors[$selectedColor]};
   }
 
   *,

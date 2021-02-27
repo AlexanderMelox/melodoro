@@ -20,7 +20,7 @@ const cy = SVGContainerSize / 2
 
 const circumference = radius * 2 * Math.PI
 
-const Timer = ({ minutes = 25 }) => {
+const Timer = ({ minutes }) => {
   const [{ font }] = useContext(SettingsContext)
 
   // Converts the time from minutes to milliseconds
@@ -130,7 +130,7 @@ export const ProgressCircle = styled.circle`
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
   stroke-width: ${strokeWidth};
-  stroke: ${colors.primary1};
+  stroke: var(--selected-color);
   fill: transparent;
   stroke-linecap: round;
   stroke-dasharray: ${circumference} ${circumference};
@@ -160,7 +160,6 @@ const fontsStyleMap = {
 
 export const Time = styled(H1)`
   font-family: var(--selected-font);
-  /* TODO: move font specific styles here instead of the h1 */
   ${({ $font }) => fontsStyleMap[$font]}
 `
 
@@ -181,7 +180,7 @@ export const TimerAction = styled.span`
 
   @media (hover: hover) {
     :hover {
-      color: ${colors.primary1};
+      color: var(--selected-color);
     }
   }
 `

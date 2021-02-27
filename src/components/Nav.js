@@ -1,6 +1,8 @@
+import { useContext } from 'react'
 import styled from 'styled-components/macro'
-import { rgba } from 'polished'
+import { rgba, setLightness } from 'polished'
 import colors from '../style/colors'
+import { SettingsContext } from '../contexts/SettingsContext'
 
 const timers = ['pomodoro', 'shortBreak', 'longBreak']
 const timerMap = {
@@ -10,6 +12,8 @@ const timerMap = {
 }
 
 const Nav = ({ selectedTimer, setSelectedTimer }) => {
+  const [{ color }] = useContext(SettingsContext)
+
   return (
     <NavContainer>
       <NavList>
@@ -17,6 +21,7 @@ const Nav = ({ selectedTimer, setSelectedTimer }) => {
           <NavListItem
             key={timer}
             $active={timer === selectedTimer}
+            $color={color}
             onClick={() => setSelectedTimer(timer)}
           >
             {timerMap[timer]}
@@ -51,8 +56,8 @@ export const NavList = styled.ul`
 export const NavListItem = styled.li`
   padding: 1.7rem 2.3rem;
   font-size: 1.2rem;
-  background-color: ${({ $active }) =>
-    $active ? colors.primary1 : 'transparent'};
+  background-color: ${({ $active, $color }) =>
+    $active ? colors[$color] : 'transparent'};
   color: ${({ $active }) =>
     $active ? colors.dark1 : rgba(colors.primary4, 0.4)};
   border-radius: 2.65rem;
@@ -60,8 +65,8 @@ export const NavListItem = styled.li`
 
   @media (hover: hover) {
     :hover {
-      background-color: ${({ $active }) =>
-        $active ? '#F98D8D' : 'transparent'};
+      background-color: ${({ $active, $color }) =>
+        $active ? setLightness(0.8, colors[$color]) : 'transparent'};
     }
   }
 `
