@@ -61,7 +61,7 @@ const Timer = ({ minutes = 25 }) => {
   const restart = useCallback(() => {
     setTime(startingMilliseconds)
     setTimerAction('start')
-  }, [])
+  }, [startingMilliseconds])
 
   const toggleTimerState = useCallback(() => {
     if (timerAction === 'start') {
@@ -71,7 +71,7 @@ const Timer = ({ minutes = 25 }) => {
     } else {
       setTimerAction('start')
     }
-  }, [timerAction, startingMilliseconds])
+  }, [timerAction, restart])
 
   return (
     <OuterCircle>
