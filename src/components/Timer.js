@@ -4,7 +4,6 @@ import React, {
   useMemo,
   useCallback,
   useContext,
-  useRef,
 } from 'react'
 import styled, { css } from 'styled-components/macro'
 import colors from '../style/colors'
@@ -170,6 +169,8 @@ export const TimerAction = styled.span`
   margin: 0.8rem 0;
   text-transform: uppercase;
   font-size: 1.4rem;
+  font-family: var(--selected-font);
+
   letter-spacing: 1.3rem;
   /* 
     letter spacing adds extra space at the end, 
