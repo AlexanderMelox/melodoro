@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro'
+import { motion } from 'framer-motion'
 import { colors } from '../style'
 
 const buttonReset = `
@@ -42,6 +43,6 @@ export const PrimaryButton = styled(Button)`
   color: ${colors.light1};
 `
 
-export const IconButton = styled.button`
+export const IconButton = styled(motion.button)`
   ${buttonReset}
 `

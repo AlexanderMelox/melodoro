@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import Modal from './Modal'
 import styled from 'styled-components/macro'
+import { motion } from 'framer-motion'
 import settingsIcon from '../assets/icon-settings.svg'
 import { IconButton } from './Buttons'
 
@@ -12,7 +13,12 @@ const Settings = () => {
 
   return (
     <SettingsContainer>
-      <SettingsIcon onClick={openModal}>
+      <SettingsIcon
+        initial={{ rotate: 0 }}
+        whileHover={{ rotate: 60 }}
+        whileTap={{ rotate: 360 }}
+        onClick={openModal}
+      >
         <img src={settingsIcon} alt="Open settings modal" />
       </SettingsIcon>
       <Modal open={showModal} closeModal={closeModal} />
@@ -28,7 +34,7 @@ const SettingsContainer = styled.div`
 `
 
 const SettingsIcon = styled(IconButton)`
-  padding: 1rem;
+  padding: 1rem 1rem 0.8rem;
   background: none;
   border: none;
 `
