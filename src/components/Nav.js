@@ -3,6 +3,7 @@ import styled from 'styled-components/macro'
 import { rgba, setLightness } from 'polished'
 import colors from '../style/colors'
 import { SettingsContext } from '../contexts/SettingsContext'
+import { AnimateSharedLayout, motion } from 'framer-motion'
 
 const timers = ['pomodoro', 'shortBreak', 'longBreak']
 const timerMap = {
@@ -17,16 +18,32 @@ const Nav = ({ selectedTimer, setSelectedTimer }) => {
   return (
     <NavContainer>
       <NavList>
-        {timers.map((timer) => (
-          <NavListItem
-            key={timer}
-            $active={timer === selectedTimer}
-            $color={color}
-            onClick={() => setSelectedTimer(timer)}
-          >
-            {timerMap[timer]}
-          </NavListItem>
-        ))}
+        <AnimateSharedLayout>
+          {timers.map((timer) => {
+            const active = timer === selectedTimer
+            return (
+              <NavListItem
+                key={timer}
+                initial={false}
+                $active={active}
+                $color={color}
+                onClick={() => setSelectedTimer(timer)}
+              >
+                <span>{timerMap[timer]}</span>
+                {active && (
+                  <NavListItemBackground
+                    layoutId="nav-item-background"
+                    initial={false}
+                    animate={{ backgroundColor: colors[color] }}
+                    $color={color}
+                  >
+                    {''}
+                  </NavListItemBackground>
+                )}
+              </NavListItem>
+            )
+          })}
+        </AnimateSharedLayout>
       </NavList>
     </NavContainer>
   )
@@ -34,6 +51,7 @@ const Nav = ({ selectedTimer, setSelectedTimer }) => {
 
 export const NavContainer = styled.nav`
   position: relative;
+  z-index: 1;
   min-width: 32.7rem;
   height: 6.3rem;
   background-color: ${colors.dark2};
@@ -54,19 +72,36 @@ export const NavList = styled.ul`
 `
 
 export const NavListItem = styled.li`
+  position: relative;
   padding: 1.7rem 2.3rem;
   font-size: 1.2rem;
-  background-color: ${({ $active, $color }) =>
-    $active ? colors[$color] : 'transparent'};
   color: ${({ $active }) =>
     $active ? colors.dark1 : rgba(colors.primary4, 0.4)};
-  border-radius: 2.65rem;
+  transition: ${({ $active }) => ($active ? 'color 10ms' : 'none')};
+  transition-delay: ${({ $active }) => ($active ? '.1s' : 'none')};
+
   cursor: pointer;
+
+  span {
+    z-index: 3;
+    display: inline-block;
+    position: relative;
+  }
+`
+
+export const NavListItemBackground = styled(motion.div)`
+  position: absolute;
+  border-radius: 2.65rem;
+  height: 4.6rem;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 2;
 
   @media (hover: hover) {
     :hover {
-      background-color: ${({ $active, $color }) =>
-        $active ? setLightness(0.8, colors[$color]) : 'transparent'};
+      background-color: ${({ $color }) =>
+        setLightness(0.8, colors[$color])} !important;
     }
   }
 `
