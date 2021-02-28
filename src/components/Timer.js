@@ -134,6 +134,7 @@ export const ProgressCircle = styled.circle`
   fill: transparent;
   stroke-linecap: round;
   stroke-dasharray: ${circumference} ${circumference};
+  transition: all 100ms cubic-bezier(0, 0, 0.3, 1);
 `
 
 export const TimerContainer = styled.div`
