@@ -1,8 +1,8 @@
-import { createContext, useCallback, useState } from 'react'
+import { createContext, useCallback, useState, useEffect } from 'react'
+import ls from 'local-storage'
 import { KUMBH_SANS } from '../constants'
 
-// TODO: get this from local storage
-const initialState = {
+const defaultSettings = {
   timer: {
     pomodoro: 25,
     shortBreak: 5,
@@ -16,7 +16,11 @@ const initialState = {
 export const SettingsContext = createContext()
 
 const SettingsProvider = ({ children }) => {
-  const [settings, setSettings] = useState(initialState)
+  const [settings, setSettings] = useState(() => {
+    const settingsFromLS = ls.get('settings')
+
+    return settingsFromLS !== null ? settingsFromLS : defaultSettings
+  })
 
   const setSelectedTimer = useCallback(
     (selectedTimer) => setSettings({ ...settings, selectedTimer }),
@@ -27,6 +31,12 @@ const SettingsProvider = ({ children }) => {
     setSelectedTimer,
     setSettings,
   }
+
+  useEffect(() => setSettings(ls.get('settings')), [])
+
+  useEffect(() => {
+    ls.set('settings', settings)
+  }, [settings])
 
   return (
     <SettingsContext.Provider value={[settings, actions]}>
