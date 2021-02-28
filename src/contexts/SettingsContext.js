@@ -1,6 +1,6 @@
-import { createContext, useCallback, useState, useEffect } from 'react'
-import ls from 'local-storage'
+import { createContext, useCallback } from 'react'
 import { KUMBH_SANS } from '../constants'
+import useStickyValue from '../hooks/useStickyValue'
 
 const defaultSettings = {
   timer: {
@@ -16,11 +16,7 @@ const defaultSettings = {
 export const SettingsContext = createContext()
 
 const SettingsProvider = ({ children }) => {
-  const [settings, setSettings] = useState(() => {
-    const settingsFromLS = ls.get('settings')
-
-    return settingsFromLS !== null ? settingsFromLS : defaultSettings
-  })
+  const [settings, setSettings] = useStickyValue(defaultSettings, 'settings')
 
   const setSelectedTimer = useCallback(
     (selectedTimer) => setSettings({ ...settings, selectedTimer }),
@@ -31,12 +27,6 @@ const SettingsProvider = ({ children }) => {
     setSelectedTimer,
     setSettings,
   }
-
-  useEffect(() => setSettings(ls.get('settings')), [])
-
-  useEffect(() => {
-    ls.set('settings', settings)
-  }, [settings])
 
   return (
     <SettingsContext.Provider value={[settings, actions]}>
