@@ -73,17 +73,22 @@ export const NavList = styled.ul`
 
 export const NavListItem = styled.li`
   position: relative;
-  padding: 1.7rem 2.3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* padding: 1.7rem 2.3rem; */
   font-size: 1.2rem;
   color: ${({ $active }) =>
     $active ? colors.dark1 : rgba(colors.primary4, 0.4)};
-  transition: ${({ $active }) => ($active ? 'color 10ms' : 'none')};
-  transition-delay: ${({ $active }) => ($active ? '.1s' : 'none')};
+  transition: color 0.1s;
+  width: 10.52rem;
+  height: 4.8rem;
+  /* transition-delay: 100ms; */
 
   cursor: pointer;
 
   span {
-    z-index: 3;
+    z-index: ${({ $active }) => ($active ? '3' : '-1')};
     display: inline-block;
     position: relative;
   }
@@ -92,8 +97,9 @@ export const NavListItem = styled.li`
 export const NavListItemBackground = styled(motion.div)`
   position: absolute;
   border-radius: 2.65rem;
-  height: 4.6rem;
+  height: 100%;
   width: 100%;
+
   top: 0;
   left: 0;
   z-index: 2;

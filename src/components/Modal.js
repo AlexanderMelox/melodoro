@@ -223,9 +223,11 @@ const ModalBackdrop = styled(motion.div)`
   background-color: rgba(0, 0, 0, 0.5);
   width: 100vw;
   height: 100vh;
+  z-index: 9000;
 `
 
 const ModalContainer = styled(motion.div)`
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 90%;
@@ -234,6 +236,7 @@ const ModalContainer = styled(motion.div)`
   margin-top: 4.6rem;
   border-radius: 1.5rem;
   background-color: ${colors.light1};
+  z-index: 5;
 `
 
 const ModalHeader = styled.header`
