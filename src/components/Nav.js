@@ -104,6 +104,9 @@ export const NavListItemBackground = styled(motion.div)`
   left: 0;
   z-index: 2;
 
+  /* TODO: get a good custom easing curve */
+  transition: background-color 0.2s;
+
   @media (hover: hover) {
     :hover {
       background-color: ${({ $color }) =>
