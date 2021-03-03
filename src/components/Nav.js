@@ -4,6 +4,7 @@ import { rgba, setLightness } from 'polished'
 import colors from '../style/colors'
 import { SettingsContext } from '../contexts/SettingsContext'
 import { AnimateSharedLayout, motion } from 'framer-motion'
+import { breakpoints } from '../style'
 
 const timers = ['pomodoro', 'shortBreak', 'longBreak']
 const timerMap = {
@@ -83,14 +84,18 @@ export const NavListItem = styled.li`
   transition: color 0.1s;
   width: 10.52rem;
   height: 4.8rem;
-  /* transition-delay: 100ms; */
-
   cursor: pointer;
 
   span {
     z-index: ${({ $active }) => ($active ? '3' : '-1')};
     display: inline-block;
     position: relative;
+    padding-top: 2px;
+  }
+
+  ${breakpoints.tablet} {
+    font-size: 1.4rem;
+    width: 12rem;
   }
 `
 
@@ -103,16 +108,6 @@ export const NavListItemBackground = styled(motion.div)`
   top: 0;
   left: 0;
   z-index: 2;
-
-  /* TODO: get a good custom easing curve */
-  transition: background-color 0.2s;
-
-  @media (hover: hover) {
-    :hover {
-      background-color: ${({ $color }) =>
-        setLightness(0.8, colors[$color])} !important;
-    }
-  }
 `
 
 export default Nav

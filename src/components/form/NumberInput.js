@@ -30,9 +30,15 @@ const NumberInput = ({
     }
   }, [value, name, setValue])
 
+  const nameMap = {
+    pomodoro: 'pomodoro',
+    shortBreak: 'short break',
+    longBreak: 'long break',
+  }
+
   return (
     <FormGroup>
-      <FormLabel htmlFor={name}>{name}</FormLabel>
+      <FormLabel htmlFor={name}>{nameMap[name]}</FormLabel>
       <InputContainer>
         <Input
           type="number"

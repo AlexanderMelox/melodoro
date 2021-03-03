@@ -11,17 +11,110 @@ import { H1 } from './Headings'
 import { minutesToMilliseconds, formatTime } from '../utils'
 import { SettingsContext } from '../contexts/SettingsContext'
 import { KUMBH_SANS, ROBOTO_SLAB, SPACE_MONO } from '../constants'
+import { breakpoints, media } from '../style'
 
-const SVGContainerSize = 267
-const strokeWidth = 8
-const radius = SVGContainerSize / 2 - strokeWidth * 2
-const cx = SVGContainerSize / 2
-const cy = SVGContainerSize / 2
+const useTimerMath = ({
+  SVGContainerSize,
+  time,
+  startingMilliseconds,
+  strokeWidth = 8,
+  addToRadius = 0,
+}) => {
+  const radius = useMemo(
+    () => SVGContainerSize / 2 - strokeWidth * 2 + addToRadius,
+    [SVGContainerSize, strokeWidth, addToRadius]
+  )
+  const cx = useMemo(() => SVGContainerSize / 2, [SVGContainerSize])
+  const cy = useMemo(() => SVGContainerSize / 2, [SVGContainerSize])
+  const circumference = useMemo(() => radius * 2 * Math.PI, [radius])
+  // percent for circle progress bar
+  const percent = useMemo(() => (time / startingMilliseconds) * 100, [
+    time,
+    startingMilliseconds,
+  ])
+  const offset = useMemo(
+    () => circumference - (percent / 100) * circumference,
+    [circumference, percent]
+  )
 
-const circumference = radius * 2 * Math.PI
+  return {
+    SVGContainerSize,
+    strokeWidth,
+    radius,
+    cx,
+    cy,
+    circumference,
+    percent,
+    offset,
+  }
+}
+
+const ProgressCircleSmall = ({ time, startingMilliseconds }) => {
+  const {
+    SVGContainerSize,
+    strokeWidth,
+    radius,
+    cx,
+    cy,
+    circumference,
+    offset,
+  } = useTimerMath({ SVGContainerSize: 267, time, startingMilliseconds })
+
+  return (
+    <SVG width={SVGContainerSize} height={SVGContainerSize}>
+      <StyledProgressCircle
+        r={radius}
+        cx={cx}
+        cy={cy}
+        style={{
+          strokeDashoffset: offset,
+          strokeWidth,
+          strokeDasharray: `${circumference} ${circumference}`,
+        }}
+      />
+    </SVG>
+  )
+}
+
+const ProgressCircleLarge = ({ time, startingMilliseconds }) => {
+  const {
+    SVGContainerSize,
+    strokeWidth,
+    radius,
+    cx,
+    cy,
+    circumference,
+    offset,
+  } = useTimerMath({
+    SVGContainerSize: 339,
+    time,
+    startingMilliseconds,
+    strokeWidth: 11,
+    addToRadius: 15,
+  })
+
+  return (
+    <SVG width={SVGContainerSize} height={SVGContainerSize}>
+      <StyledProgressCircle
+        r={radius}
+        cx={cx}
+        cy={cy}
+        style={{
+          strokeDashoffset: offset,
+          strokeWidth,
+          strokeDasharray: `${circumference} ${circumference}`,
+        }}
+      />
+    </SVG>
+  )
+}
 
 const Timer = ({ minutes }) => {
   const [{ font }] = useContext(SettingsContext)
+
+  const [isLargerThan768, setIsLargerThan768] = useState(
+    window.matchMedia(media.tablet).matches
+  )
 
   // Converts the time from minutes to milliseconds
   const [startingMilliseconds, setStartingMilliSeconds] = useState(
@@ -30,10 +123,6 @@ const Timer = ({ minutes }) => {
 
   const [timerAction, setTimerAction] = useState('start')
   const [time, setTime] = useState(startingMilliseconds)
-
-  // percent for circle progress bar
-  const percent = (time / startingMilliseconds) * 100
-  const offset = circumference - (percent / 100) * circumference
 
   // converts the time from milliseconds to a time format MM:SS
   const formattedTime = useMemo(() => formatTime(time), [time])
@@ -73,17 +162,30 @@ const Timer = ({ minutes }) => {
     }
   }, [timerAction, restart])
 
+  useEffect(() => {
+    const onResize = () => {
+      setIsLargerThan768(window.matchMedia(media.tablet).matches)
+    }
+
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
   return (
     <OuterCircle>
       <InnerCircle>
-        <SVG width={SVGContainerSize} height={SVGContainerSize}>
-          <ProgressCircle
-            r={radius}
-            cx={cx}
-            cy={cy}
-            style={{ strokeDashoffset: offset }}
+        {isLargerThan768 ? (
+          <ProgressCircleLarge
+            time={time}
+            startingMilliseconds={startingMilliseconds}
           />
-        </SVG>
+        ) : (
+          <ProgressCircleSmall
+            time={time}
+            startingMilliseconds={startingMilliseconds}
+          />
+        )}
+
         <TimerContainer>
           <Time $font={font}>{formattedTime}</Time>
           <TimerAction
@@ -113,6 +215,12 @@ export const OuterCircle = styled.div`
   margin: 4.8rem auto 8rem;
   background-image: linear-gradient(to bottom right, #0e112a, #2e325a);
   box-shadow: -5rem -5rem 10rem 0 #272c5a, 5rem 5rem 10rem 0 #121530;
+
+  ${breakpoints.tablet} {
+    width: 41rem;
+    height: 41rem;
+    margin: 10.9rem auto 14.4rem;
+  }
 `
 
 export const InnerCircle = styled.div`
@@ -122,18 +230,21 @@ export const InnerCircle = styled.div`
   height: 26.78rem;
   border-radius: 50%;
   background-color: ${colors.dark2};
+
+  ${breakpoints.tablet} {
+    width: 36.6rem;
+    height: 36.6rem;
+  }
 `
 
 export const SVG = styled.svg``
 
-export const ProgressCircle = styled.circle`
+export const StyledProgressCircle = styled.circle`
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
-  stroke-width: ${strokeWidth};
   stroke: var(--selected-color);
   fill: transparent;
   stroke-linecap: round;
-  stroke-dasharray: ${circumference} ${circumference};
   transition: all 100ms cubic-bezier(0, 0, 0.3, 1);
 `
 
@@ -162,6 +273,12 @@ const fontsStyleMap = {
 export const Time = styled(H1)`
   font-family: var(--selected-font);
   ${({ $font }) => fontsStyleMap[$font]}
+  line-height: 1;
+
+  ${breakpoints.tablet} {
+    margin-bottom: 4.8rem;
+    transform: translateY(1.6rem);
+  }
 `
 
 export const TimerAction = styled.span`
@@ -183,6 +300,10 @@ export const TimerAction = styled.span`
     :hover {
       color: var(--selected-color);
     }
+  }
+
+  ${breakpoints.tablet} {
+    font-size: 1.6rem;
   }
 `
 

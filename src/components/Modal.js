@@ -109,6 +109,13 @@ const Modal = ({ open = false, closeModal }) => {
 
   useEffect(() => resetValues(), [open, resetValues])
 
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden'
+    }
+    return () => (document.body.style.overflow = 'initial')
+  }, [open])
+
   return createPortal(
     <AnimatePresence>
       {open && (

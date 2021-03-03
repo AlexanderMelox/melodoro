@@ -18,7 +18,7 @@ function App() {
       <GlobalStyle $selectedFont={font} $selectedColor={color} />
       <Container>
         <Header>
-          <H2>melodoro</H2>
+          <H2>pomodoro</H2>
         </Header>
         <Nav
           selectedTimer={selectedTimer}

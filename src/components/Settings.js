@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import Modal from './Modal'
 import styled from 'styled-components/macro'
-import { motion } from 'framer-motion'
 import settingsIcon from '../assets/icon-settings.svg'
 import { IconButton } from './Buttons'
 

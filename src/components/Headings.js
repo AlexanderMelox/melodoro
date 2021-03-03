@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components/macro'
-import colors from '../style/colors'
+import { colors, breakpoints } from '../style'
 
 const commonStyles = css`
   margin-bottom: ${({ $mb }) => $mb};
@@ -9,6 +9,10 @@ export const H1 = styled.h1`
   font-size: 8rem;
   letter-spacing: -0.4rem;
   line-height: 1.2;
+
+  ${breakpoints.tablet} {
+    font-size: 10rem;
+  }
 `
 
 export const H2 = styled.h2`
