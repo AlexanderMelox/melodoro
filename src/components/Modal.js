@@ -16,10 +16,10 @@ import checkIcon from '../assets/icon-check.svg'
 import useClickOutside from '../hooks/useClickOutside'
 import { H4 } from './Headings'
 import { KUMBH_SANS, ROBOTO_SLAB, SPACE_MONO } from '../constants'
-import { RadioGroup, RadioLabel } from './form'
+import { RadioGroup, RadioLabel, NumberInput, NumberInputWrapper } from './form'
 import { fontTypeToCSSFontFamily } from '../utils'
 import { SettingsContext } from '../contexts/SettingsContext'
-import NumberInput from './form/NumberInput'
+import { breakpoints } from '../style'
 
 // portal query selector
 const modalRoot = document.getElementById('modal-root')
@@ -135,32 +135,30 @@ const Modal = ({ open = false, closeModal }) => {
             <ModalBody>
               <form onSubmit={applyChanges}>
                 <ModalSection>
-                  <H4 $align="center" $mb="1.6rem">
-                    Time (minutes)
-                  </H4>
-                  <NumberInput
-                    value={timeInputs.pomodoro}
-                    onChange={onTimerInputChange}
-                    setValue={setTimeInputs}
-                    name="pomodoro"
-                  />
-                  <NumberInput
-                    value={timeInputs.shortBreak}
-                    onChange={onTimerInputChange}
-                    setValue={setTimeInputs}
-                    name="shortBreak"
-                  />
-                  <NumberInput
-                    value={timeInputs.longBreak}
-                    onChange={onTimerInputChange}
-                    setValue={setTimeInputs}
-                    name="longBreak"
-                  />
+                  <ModalSectionTitle>Time (minutes)</ModalSectionTitle>
+                  <NumberInputWrapper>
+                    <NumberInput
+                      value={timeInputs.pomodoro}
+                      onChange={onTimerInputChange}
+                      setValue={setTimeInputs}
+                      name="pomodoro"
+                    />
+                    <NumberInput
+                      value={timeInputs.shortBreak}
+                      onChange={onTimerInputChange}
+                      setValue={setTimeInputs}
+                      name="shortBreak"
+                    />
+                    <NumberInput
+                      value={timeInputs.longBreak}
+                      onChange={onTimerInputChange}
+                      setValue={setTimeInputs}
+                      name="longBreak"
+                    />
+                  </NumberInputWrapper>
                 </ModalSection>
                 <ModalSection>
-                  <H4 $align="center" $mb="1.6rem">
-                    Font
-                  </H4>
+                  <ModalSectionTitle>Font</ModalSectionTitle>
                   <RadioGroup onChange={onFontSelection}>
                     {fontOptions.map((font) => (
                       <FontRadioLabel
@@ -182,9 +180,7 @@ const Modal = ({ open = false, closeModal }) => {
                   </RadioGroup>
                 </ModalSection>
                 <ModalSection>
-                  <H4 $align="center" $mb="1.6rem">
-                    Color
-                  </H4>
+                  <ModalSectionTitle>Color</ModalSectionTitle>
                   <RadioGroup onChange={onColorSelection}>
                     {colorOptions.map((color) => (
                       <ColorRadioLabel
@@ -223,7 +219,7 @@ const Modal = ({ open = false, closeModal }) => {
 const ModalBackdrop = styled(motion.div)`
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
@@ -238,9 +234,9 @@ const ModalContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   width: 90%;
-  min-height: 54.9rem;
+  max-height: 54.9rem;
   max-width: 54rem;
-  margin-top: 4.6rem;
+  margin-top: -2.6rem;
   border-radius: 1.5rem;
   background-color: ${colors.light1};
   z-index: 5;
@@ -252,17 +248,29 @@ const ModalHeader = styled.header`
   align-items: center;
   padding: 2.4rem;
   border-bottom: 1px solid ${colors.borders.gray1};
+
+  ${breakpoints.tablet} {
+    padding: 3.4rem 4rem 2.5rem;
+  }
 `
 
 const ModalTitle = styled.h2`
   font-weight: bold;
   font-size: 2rem;
   color: ${colors.dark2};
+
+  ${breakpoints.tablet} {
+    font-size: 2.8rem;
+  }
 `
 
 const ModalBody = styled.div`
   padding: 2.4rem;
   position: relative;
+
+  ${breakpoints.tablet} {
+    padding: 2.4rem 4rem;
+  }
 `
 
 const ModalSection = styled.div`
@@ -271,6 +279,17 @@ const ModalSection = styled.div`
   &:not(&:last-of-type) {
     border-bottom: 1px solid ${colors.borders.gray1};
     margin-bottom: 2.4rem;
+  }
+`
+
+const ModalSectionTitle = styled(H4)`
+  text-align: center;
+  margin-bottom: 1.6rem;
+
+  ${breakpoints.tablet} {
+    font-size: 1.3rem;
+    text-align: left;
+    margin-bottom: 2.3rem;
   }
 `
 

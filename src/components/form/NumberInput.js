@@ -3,6 +3,7 @@ import styled from 'styled-components/macro'
 import FormGroup from './FormGroup'
 import FormLabel from './FormLabel'
 import Input from './Input'
+import { breakpoints } from '../../style'
 
 const NumberInput = ({
   value = 0,
@@ -93,6 +94,10 @@ const IconsContainer = styled.div`
   justify-content: space-between;
   height: 2rem;
   cursor: pointer;
+
+  ${breakpoints.tablet} {
+    top: 1.5rem;
+  }
 `
 
 export default NumberInput
