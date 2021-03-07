@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import styled from 'styled-components/macro'
-import { rgba, setLightness } from 'polished'
+import { rgba } from 'polished'
 import colors from '../style/colors'
 import { SettingsContext } from '../contexts/SettingsContext'
 import { AnimateSharedLayout, motion } from 'framer-motion'

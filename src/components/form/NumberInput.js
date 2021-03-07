@@ -75,14 +75,14 @@ const IconDown = ({ ...props }) => (
 
 const SVG = styled.svg`
   opacity: 0.25;
+
+  :hover {
+    opacity: 1;
+  }
 `
 
 const InputContainer = styled.div`
   position: relative;
-
-  :hover ${SVG} {
-    opacity: 1;
-  }
 `
 
 const IconsContainer = styled.div`
