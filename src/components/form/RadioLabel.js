@@ -2,6 +2,10 @@ import styled from 'styled-components/macro'
 import { colors } from '../../style'
 
 const RadioLabel = styled.label`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   span {
     position: relative;
     width: 4rem;

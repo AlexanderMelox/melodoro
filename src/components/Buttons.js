@@ -39,7 +39,7 @@ export const Button = styled.button`
 `
 
 export const PrimaryButton = styled(Button)`
-  background-color: ${colors.primary1};
+  background-color: var(--selected-color);
   color: ${colors.light1};
 `
 

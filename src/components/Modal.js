@@ -157,7 +157,7 @@ const Modal = ({ open = false, closeModal }) => {
                     />
                   </NumberInputWrapper>
                 </ModalSection>
-                <ModalSection>
+                <ModalSection $inline>
                   <ModalSectionTitle>Font</ModalSectionTitle>
                   <RadioGroup onChange={onFontSelection}>
                     {fontOptions.map((font) => (
@@ -179,7 +179,7 @@ const Modal = ({ open = false, closeModal }) => {
                     ))}
                   </RadioGroup>
                 </ModalSection>
-                <ModalSection>
+                <ModalSection $inline>
                   <ModalSectionTitle>Color</ModalSectionTitle>
                   <RadioGroup onChange={onColorSelection}>
                     {colorOptions.map((color) => (
@@ -219,7 +219,7 @@ const Modal = ({ open = false, closeModal }) => {
 const ModalBackdrop = styled(motion.div)`
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   position: fixed;
   top: 0;
   left: 0;
@@ -236,10 +236,15 @@ const ModalContainer = styled(motion.div)`
   width: 90%;
   max-height: 54.9rem;
   max-width: 54rem;
-  margin-top: -2.6rem;
+  margin-top: 4.6rem;
   border-radius: 1.5rem;
   background-color: ${colors.light1};
   z-index: 5;
+
+  ${breakpoints.tablet} {
+    align-self: center;
+    margin-top: -2.6rem;
+  }
 `
 
 const ModalHeader = styled.header`
@@ -280,6 +285,20 @@ const ModalSection = styled.div`
     border-bottom: 1px solid ${colors.borders.gray1};
     margin-bottom: 2.4rem;
   }
+
+  ${(props) =>
+    props.$inline &&
+    `
+    ${breakpoints.tablet} {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      ${ModalSectionTitle} {
+        margin: 0;
+      }
+    }
+  `}
 `
 
 const ModalSectionTitle = styled(H4)`
