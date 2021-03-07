@@ -86,6 +86,12 @@ export const NavListItem = styled.li`
   height: 4.8rem;
   cursor: pointer;
 
+  @media (hover: hover) {
+    :hover {
+      color: ${(props) => (props.$active ? colors.dark1 : colors.primary4)};
+    }
+  }
+
   span {
     z-index: ${({ $active }) => ($active ? '3' : '-1')};
     display: inline-block;
