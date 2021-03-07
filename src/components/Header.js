@@ -21,6 +21,12 @@ const Header = styled.header`
     align-items: flex-start;
     padding-top: 8rem;
   }
+
+  /* media queries for desktop */
+  ${breakpoints.tablet} {
+    align-items: center;
+    padding: 0;
+  }
 `
 
 export default Header

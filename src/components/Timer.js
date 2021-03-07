@@ -221,6 +221,10 @@ export const OuterCircle = styled.div`
     height: 41rem;
     margin: 10.9rem auto 14.4rem;
   }
+
+  ${breakpoints.tablet} {
+    margin: 4.5rem auto 6.3rem;
+  }
 `
 
 export const InnerCircle = styled.div`

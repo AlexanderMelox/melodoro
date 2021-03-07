@@ -15,6 +15,10 @@ const Container = styled.main`
   ${breakpoints.tablet} {
     grid-template-rows: 16.7rem 6.3rem 66.3rem 13.1rem;
   }
+
+  ${breakpoints.desktop} {
+    grid-template-rows: 13.5rem 6.3rem 51.8rem 8.4rem;
+  }
 `
 
 export default Container

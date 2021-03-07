@@ -1,7 +1,7 @@
 const emify = (px) => px / 16
 
 export const tabletEm = emify(768)
-export const desktopEm = emify(1440)
+export const desktopEm = emify(1064)
 
 export const media = {
   tablet: `(min-width: ${tabletEm}em)`,
