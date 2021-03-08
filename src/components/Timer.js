@@ -6,6 +6,7 @@ import React, {
   useContext,
 } from 'react'
 import styled, { css } from 'styled-components/macro'
+import { motion } from 'framer-motion'
 import colors from '../style/colors'
 import { H1 } from './Headings'
 import { minutesToMilliseconds, formatTime } from '../utils'
@@ -109,7 +110,7 @@ const ProgressCircleLarge = ({ time, startingMilliseconds }) => {
   )
 }
 
-const Timer = ({ minutes }) => {
+const Timer = React.forwardRef(({ minutes }, ref) => {
   const [{ font }] = useContext(SettingsContext)
 
   const [isLargerThan768, setIsLargerThan768] = useState(
@@ -172,7 +173,7 @@ const Timer = ({ minutes }) => {
   }, [])
 
   return (
-    <OuterCircle>
+    <OuterCircle ref={ref}>
       <InnerCircle>
         {isLargerThan768 ? (
           <ProgressCircleLarge
@@ -192,13 +193,15 @@ const Timer = ({ minutes }) => {
             onClick={toggleTimerState}
             $isStart={timerAction === 'start'}
           >
-            {timerAction}
+            <motion.div whileHover={{ y: -3 }} whileTap={{ y: -2 }}>
+              {timerAction}
+            </motion.div>
           </TimerAction>
         </TimerContainer>
       </InnerCircle>
     </OuterCircle>
   )
-}
+})
 
 const flexCenter = `
   display: flex;
@@ -206,7 +209,7 @@ const flexCenter = `
   align-items: center;
 `
 
-export const OuterCircle = styled.div`
+export const OuterCircle = styled(motion.div)`
   ${flexCenter};
   width: 30rem;
   height: 30rem;
@@ -281,7 +284,7 @@ export const Time = styled(H1)`
 
   ${breakpoints.tablet} {
     margin-bottom: 4.8rem;
-    transform: translateY(1.6rem);
+    transform: translate(0, 1.6rem);
   }
 `
 

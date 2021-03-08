@@ -1,8 +1,9 @@
 import styled from 'styled-components/macro'
+import { motion } from 'framer-motion'
 import { H2 } from './Headings'
 import { breakpoints } from '../style'
 
-const Header = styled.header`
+const Header = styled(motion.header)`
   display: flex;
   justify-content: center;
   align-items: center;

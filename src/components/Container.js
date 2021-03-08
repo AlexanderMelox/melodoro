@@ -1,7 +1,8 @@
 import styled from 'styled-components/macro'
+import { motion } from 'framer-motion'
 import { breakpoints } from '../style'
 
-const Container = styled.main`
+const Container = styled(motion.main)`
   display: grid;
   min-height: 100vh;
   grid-template-columns: 2.4rem 1fr 2.4rem;

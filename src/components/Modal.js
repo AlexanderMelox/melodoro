@@ -28,12 +28,26 @@ const variants = {
   backdrop: {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
-    close: { opacity: 0 },
+    close: {
+      opacity: 0,
+    },
   },
   modal: {
     hidden: { opacity: 0, y: 100 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { staggerChildren: 0.2 },
+    },
+    close: {
+      opacity: 0,
+      y: 100,
+      transition: { when: 'afterChildren', staggerChildren: 0.1 },
+    },
+  },
+  modalSection: {
+    hidden: { opacity: 0, y: -10 },
     visible: { opacity: 1, y: 0 },
-    close: { opacity: 0, y: 100 },
   },
 }
 
@@ -134,7 +148,7 @@ const Modal = ({ open = false, closeModal }) => {
             </ModalHeader>
             <ModalBody>
               <form onSubmit={applyChanges}>
-                <ModalSection>
+                <ModalSection variants={variants.modalSection}>
                   <ModalSectionTitle>Time (minutes)</ModalSectionTitle>
                   <NumberInputWrapper>
                     <NumberInput
@@ -157,7 +171,7 @@ const Modal = ({ open = false, closeModal }) => {
                     />
                   </NumberInputWrapper>
                 </ModalSection>
-                <ModalSection $inline>
+                <ModalSection variants={variants.modalSection} $inline>
                   <ModalSectionTitle>Font</ModalSectionTitle>
                   <RadioGroup onChange={onFontSelection}>
                     {fontOptions.map((font) => (
@@ -179,7 +193,7 @@ const Modal = ({ open = false, closeModal }) => {
                     ))}
                   </RadioGroup>
                 </ModalSection>
-                <ModalSection $inline>
+                <ModalSection variants={variants.modalSection} $inline>
                   <ModalSectionTitle>Color</ModalSectionTitle>
                   <RadioGroup onChange={onColorSelection}>
                     {colorOptions.map((color) => (
@@ -278,7 +292,7 @@ const ModalBody = styled.div`
   }
 `
 
-const ModalSection = styled.div`
+const ModalSection = styled(motion.div)`
   padding-bottom: 2.4rem;
 
   &:not(&:last-of-type) {

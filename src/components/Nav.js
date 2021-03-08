@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, forwardRef } from 'react'
 import styled from 'styled-components/macro'
 import { rgba } from 'polished'
 import colors from '../style/colors'
@@ -13,11 +13,11 @@ const timerMap = {
   longBreak: 'long break',
 }
 
-const Nav = ({ selectedTimer, setSelectedTimer }) => {
+const Nav = forwardRef(({ selectedTimer, setSelectedTimer }, ref) => {
   const [{ color }] = useContext(SettingsContext)
 
   return (
-    <NavContainer>
+    <NavContainer ref={ref}>
       <NavList>
         <AnimateSharedLayout>
           {timers.map((timer) => {
@@ -48,7 +48,7 @@ const Nav = ({ selectedTimer, setSelectedTimer }) => {
       </NavList>
     </NavContainer>
   )
-}
+})
 
 export const NavContainer = styled.nav`
   position: relative;

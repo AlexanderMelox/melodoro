@@ -1,17 +1,17 @@
 import React, { useCallback, useState } from 'react'
 import Modal from './Modal'
 import styled from 'styled-components/macro'
-import settingsIcon from '../assets/icon-settings.svg'
+import { motion } from 'framer-motion'
 import { IconButton } from './Buttons'
 
-const Settings = () => {
+const Settings = React.forwardRef((props, ref) => {
   const [showModal, setShowModal] = useState(false)
 
   const openModal = useCallback(() => setShowModal(true), [])
   const closeModal = useCallback(() => setShowModal(false), [])
 
   return (
-    <SettingsContainer>
+    <SettingsContainer ref={ref}>
       <SettingsIcon
         initial={{ rotate: 0, opacity: 0.5 }}
         whileHover={{ rotate: 60, opacity: 1 }}
@@ -23,7 +23,7 @@ const Settings = () => {
       <Modal open={showModal} closeModal={closeModal} />
     </SettingsContainer>
   )
-}
+})
 
 const SettingsSVG = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28">
@@ -34,7 +34,7 @@ const SettingsSVG = () => (
   </svg>
 )
 
-const SettingsContainer = styled.div`
+const SettingsContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: flex-start;
