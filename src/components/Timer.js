@@ -4,39 +4,40 @@ import React, {
   useMemo,
   useCallback,
   useContext,
-} from 'react'
-import styled, { css } from 'styled-components/macro'
-import { motion } from 'framer-motion'
-import colors from '../style/colors'
-import { H1 } from './Headings'
-import { minutesToMilliseconds, formatTime } from '../utils'
-import { SettingsContext } from '../contexts/SettingsContext'
-import { KUMBH_SANS, ROBOTO_SLAB, SPACE_MONO } from '../constants'
-import { breakpoints, media } from '../style'
+  useRef
+} from 'react';
+import styled, { css } from 'styled-components/macro';
+import { motion } from 'framer-motion';
+import colors from '../style/colors';
+import { H1 } from './Headings';
+import { minutesToMilliseconds, formatTime } from '../utils';
+import { SettingsContext } from '../contexts/SettingsContext';
+import { KUMBH_SANS, ROBOTO_SLAB, SPACE_MONO } from '../constants';
+import { breakpoints, media } from '../style';
 
 const useTimerMath = ({
   SVGContainerSize,
   time,
   startingMilliseconds,
   strokeWidth = 8,
-  addToRadius = 0,
+  addToRadius = 0
 }) => {
   const radius = useMemo(
     () => SVGContainerSize / 2 - strokeWidth * 2 + addToRadius,
     [SVGContainerSize, strokeWidth, addToRadius]
-  )
-  const cx = useMemo(() => SVGContainerSize / 2, [SVGContainerSize])
-  const cy = useMemo(() => SVGContainerSize / 2, [SVGContainerSize])
-  const circumference = useMemo(() => radius * 2 * Math.PI, [radius])
+  );
+  const cx = useMemo(() => SVGContainerSize / 2, [SVGContainerSize]);
+  const cy = useMemo(() => SVGContainerSize / 2, [SVGContainerSize]);
+  const circumference = useMemo(() => radius * 2 * Math.PI, [radius]);
   // percent for circle progress bar
-  const percent = useMemo(() => (time / startingMilliseconds) * 100, [
-    time,
-    startingMilliseconds,
-  ])
+  const percent = useMemo(
+    () => (time / startingMilliseconds) * 100,
+    [time, startingMilliseconds]
+  );
   const offset = useMemo(
     () => circumference - (percent / 100) * circumference,
     [circumference, percent]
-  )
+  );
 
   return {
     SVGContainerSize,
@@ -46,9 +47,9 @@ const useTimerMath = ({
     cy,
     circumference,
     percent,
-    offset,
-  }
-}
+    offset
+  };
+};
 
 const ProgressCircleSmall = ({ time, startingMilliseconds }) => {
   const {
@@ -58,8 +59,8 @@ const ProgressCircleSmall = ({ time, startingMilliseconds }) => {
     cx,
     cy,
     circumference,
-    offset,
-  } = useTimerMath({ SVGContainerSize: 267, time, startingMilliseconds })
+    offset
+  } = useTimerMath({ SVGContainerSize: 267, time, startingMilliseconds });
 
   return (
     <SVG width={SVGContainerSize} height={SVGContainerSize}>
@@ -70,12 +71,12 @@ const ProgressCircleSmall = ({ time, startingMilliseconds }) => {
         style={{
           strokeDashoffset: offset,
           strokeWidth,
-          strokeDasharray: `${circumference} ${circumference}`,
+          strokeDasharray: `${circumference} ${circumference}`
         }}
       />
     </SVG>
-  )
-}
+  );
+};
 
 const ProgressCircleLarge = ({ time, startingMilliseconds }) => {
   const {
@@ -85,14 +86,14 @@ const ProgressCircleLarge = ({ time, startingMilliseconds }) => {
     cx,
     cy,
     circumference,
-    offset,
+    offset
   } = useTimerMath({
     SVGContainerSize: 339,
     time,
     startingMilliseconds,
     strokeWidth: 11,
-    addToRadius: 15,
-  })
+    addToRadius: 15
+  });
 
   return (
     <SVG width={SVGContainerSize} height={SVGContainerSize}>
@@ -103,74 +104,81 @@ const ProgressCircleLarge = ({ time, startingMilliseconds }) => {
         style={{
           strokeDashoffset: offset,
           strokeWidth,
-          strokeDasharray: `${circumference} ${circumference}`,
+          strokeDasharray: `${circumference} ${circumference}`
         }}
       />
     </SVG>
-  )
-}
+  );
+};
 
 const Timer = React.forwardRef(({ minutes }, ref) => {
-  const [{ font }] = useContext(SettingsContext)
+  const [{ font }] = useContext(SettingsContext);
+  let audio = useRef(new Audio('/alarm-kitchen.mp3'));
 
   const [isLargerThan768, setIsLargerThan768] = useState(
     window.matchMedia(media.tablet).matches
-  )
+  );
 
   // Converts the time from minutes to milliseconds
   const [startingMilliseconds, setStartingMilliSeconds] = useState(
     minutesToMilliseconds(minutes)
-  )
+  );
 
-  const [timerAction, setTimerAction] = useState('start')
-  const [time, setTime] = useState(startingMilliseconds)
+  const [timerAction, setTimerAction] = useState('start');
+  const [time, setTime] = useState(startingMilliseconds);
 
   // converts the time from milliseconds to a time format MM:SS
-  const formattedTime = useMemo(() => formatTime(time), [time])
+  const formattedTime = useMemo(() => formatTime(time), [time]);
+
+  // play the alarm
+  const playSound = useCallback(() => {
+    audio.current.play();
+  }, []);
 
   useEffect(() => {
     const countdown = setInterval(() => {
       if (timerAction !== 'start') {
-        setTime((prevTime) => prevTime - 1000)
+        setTime(prevTime => prevTime - 1000);
       }
-    }, 1000)
+    }, 1000);
     if (time <= 0) {
-      setStartingMilliSeconds(minutesToMilliseconds(minutes))
-      clearInterval(countdown)
-      setTimerAction('restart')
+      setStartingMilliSeconds(minutesToMilliseconds(minutes));
+      clearInterval(countdown);
+      setTimerAction('restart');
+      playSound();
     }
-    return () => clearInterval(countdown)
-  }, [timerAction, time, minutes])
+    return () => clearInterval(countdown);
+  }, [timerAction, time, minutes, playSound]);
 
   useEffect(() => {
-    setTimerAction('start')
-    setStartingMilliSeconds(minutesToMilliseconds(minutes))
-    setTime(startingMilliseconds)
-  }, [minutes, startingMilliseconds])
+    setTimerAction('start');
+    setStartingMilliSeconds(minutesToMilliseconds(minutes));
+    setTime(startingMilliseconds);
+  }, [minutes, startingMilliseconds]);
 
   const restart = useCallback(() => {
-    setTime(startingMilliseconds)
-    setTimerAction('start')
-  }, [startingMilliseconds])
+    setTime(startingMilliseconds);
+    setTimerAction('start');
+  }, [startingMilliseconds]);
 
   const toggleTimerState = useCallback(() => {
     if (timerAction === 'start') {
-      setTimerAction('pause')
+      setTimerAction('pause');
     } else if (timerAction === 'restart') {
-      restart()
+      restart();
     } else {
-      setTimerAction('start')
+      setTimerAction('start');
     }
-  }, [timerAction, restart])
+  }, [timerAction, restart]);
 
   useEffect(() => {
     const onResize = () => {
-      setIsLargerThan768(window.matchMedia(media.tablet).matches)
-    }
+      setIsLargerThan768(window.matchMedia(media.tablet).matches);
+    };
 
-    window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
-  }, [])
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   return (
     <OuterCircle ref={ref}>
@@ -200,14 +208,14 @@ const Timer = React.forwardRef(({ minutes }, ref) => {
         </TimerContainer>
       </InnerCircle>
     </OuterCircle>
-  )
-})
+  );
+});
 
 const flexCenter = `
   display: flex;
   justify-content: center;
   align-items: center;
-`
+`;
 
 export const OuterCircle = styled(motion.div)`
   ${flexCenter};
@@ -228,7 +236,7 @@ export const OuterCircle = styled(motion.div)`
   ${breakpoints.tablet} {
     margin: 4.5rem auto 6.3rem;
   }
-`
+`;
 
 export const InnerCircle = styled.div`
   position: relative;
@@ -242,9 +250,9 @@ export const InnerCircle = styled.div`
     width: 36.6rem;
     height: 36.6rem;
   }
-`
+`;
 
-export const SVG = styled.svg``
+export const SVG = styled.svg``;
 
 export const StyledProgressCircle = styled.circle`
   transform: rotate(-90deg);
@@ -253,7 +261,7 @@ export const StyledProgressCircle = styled.circle`
   fill: transparent;
   stroke-linecap: round;
   transition: all 100ms cubic-bezier(0, 0, 0.3, 1);
-`
+`;
 
 export const TimerContainer = styled.div`
   position: absolute;
@@ -261,7 +269,7 @@ export const TimerContainer = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -35%);
-`
+`;
 
 const fontsStyleMap = {
   [KUMBH_SANS]: css``,
@@ -274,8 +282,8 @@ const fontsStyleMap = {
     margin-right: 0.9rem;
     font-weight: normal;
     transform: translateY(-1rem);
-  `,
-}
+  `
+};
 
 export const Time = styled(H1)`
   font-family: var(--selected-font);
@@ -286,7 +294,7 @@ export const Time = styled(H1)`
     margin-bottom: 4.8rem;
     transform: translate(0, 1.6rem);
   }
-`
+`;
 
 export const TimerAction = styled.span`
   display: inline-block;
@@ -312,6 +320,6 @@ export const TimerAction = styled.span`
   ${breakpoints.tablet} {
     font-size: 1.6rem;
   }
-`
+`;
 
-export default Timer
+export default Timer;
